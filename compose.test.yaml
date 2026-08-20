@@ -1,0 +1,13 @@
+# CI/test override: keep dependencies isolated from host ports. The caller
+# should choose a unique project name, e.g. `-p backend-interview-lab-test-123`.
+services:
+  postgres:
+    ports: []
+  kafka:
+    ports: []
+  redis:
+    ports: []
+  api:
+    ports: []
+  web:
+    ports: []

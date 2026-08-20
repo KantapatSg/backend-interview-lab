@@ -1,6 +1,6 @@
-# Backend Technical Interview Crash Kit
+# Backend Interview Lab
 
-ชุดทบทวนเร่งด่วนสำหรับ Technical Interview วันที่ **22 สิงหาคม 2026** โดยเน้น
+mini-project สำหรับ Technical Interview วันที่ **22 สิงหาคม 2026** โดยเน้น
 Go, Microservices, CQRS, Kafka, PostgreSQL และ Next.js
 
 เป้าหมายไม่ใช่จำทุก API แต่ต้องอธิบายได้ว่าแต่ละแนวคิดแก้ปัญหาอะไร มี trade-off
@@ -25,6 +25,19 @@ Phase นี้เพิ่มจากประสบการณ์ใน resu
 4. [PostgreSQL use cases](docs/08-postgresql-use-cases.md)
 5. [Resume-based questions และ story preparation](docs/09-resume-based-prep.md)
 6. [Coverage matrix ตรวจว่าหัวข้อเดิมอยู่ครบ](docs/10-coverage-matrix.md)
+7. [Master curriculum, implementation, Graphify และ GitLab plan](docs/11-master-curriculum-implementation-plan.md)
+
+## Runnable platform vertical slice
+
+The first integrated slice lives under `platform/` and includes a Go HTTP API,
+PostgreSQL transactional outbox, Kafka producer/consumer and Redis cache-aside
+adapter. See [Infrastructure MyMap](mymap/infrastructure.md) and run:
+
+```powershell
+go test ./...
+docker compose up -d postgres
+docker compose --profile full up --build -d
+```
 
 ถ้าเวลาน้อยให้อ่าน Kafka → Resume preparation → Next.js → Go production → PostgreSQL
 เพราะ Go/PostgreSQL เป็นพื้นฐานจากงานอยู่แล้ว ส่วน Kafka/Next.js เป็นจุดที่ต้องเตรียมภาษา
@@ -48,6 +61,28 @@ go test ./...
 
 Next.js มี code-reading lab เพิ่มที่ `labs/nextjs-import-dashboard` ครอบคลุม Server
 Component, Client upload form, Route Handler/BFF และ bounded status polling
+
+## Runnable platform vertical slice
+
+โค้ดใน `platform/` รวม flow ที่เอาไปอธิบายใน interview ได้จริง:
+
+```text
+POST /jobs
+  → PostgreSQL transaction (jobs + outbox_events)
+  → Kafka jobs.events.v1
+  → idempotent worker receipt
+  → GET /jobs/{id} (Redis cache-aside + PostgreSQL fallback)
+```
+
+```powershell
+go test ./...
+docker compose up -d postgres migrate
+docker compose --profile full up --build -d
+Invoke-RestMethod http://localhost:8080/healthz
+```
+
+`Idempotency-Key` เป็น header ที่จำเป็นสำหรับ `POST /jobs` เพื่อให้ command
+retry แล้วไม่สร้าง job ซ้ำ ส่วน Redis เป็น cache เท่านั้น ไม่ใช่ source of truth
 
 ## โปรเจกต์จริงที่ใช้ประกอบคำตอบ
 

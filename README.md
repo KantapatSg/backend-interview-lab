@@ -6,7 +6,7 @@ Go, Microservices, CQRS, Kafka, PostgreSQL และ Next.js
 เป้าหมายไม่ใช่จำทุก API แต่ต้องอธิบายได้ว่าแต่ละแนวคิดแก้ปัญหาอะไร มี trade-off
 อะไร และระบบจะทำอย่างไรเมื่อบางส่วนล้มเหลว
 
-## ลำดับอ่าน
+## Phase 1 — Foundation
 
 1. [แผนสองวัน](docs/00-crash-plan.md)
 2. [Cheat sheet](docs/01-cheat-sheet.md)
@@ -14,6 +14,21 @@ Go, Microservices, CQRS, Kafka, PostgreSQL และ Next.js
 4. [System design](docs/03-system-design.md)
 5. [Question bank](docs/04-question-bank.md)
 6. รัน mini-labs แล้วอธิบายโค้ดออกเสียง
+
+## Phase 2 — Production Deep Dives
+
+Phase นี้เพิ่มจากประสบการณ์ใน resume และใช้สถานการณ์ที่เกิดในงานจริง:
+
+1. [Kafka: import, inventory และ integration](docs/05-kafka-deep-dive.md)
+2. [Go production review](docs/06-go-production-review.md)
+3. [Next.js สำหรับ backend-focused interview](docs/07-nextjs-deep-dive.md)
+4. [PostgreSQL use cases](docs/08-postgresql-use-cases.md)
+5. [Resume-based questions และ story preparation](docs/09-resume-based-prep.md)
+6. [Coverage matrix ตรวจว่าหัวข้อเดิมอยู่ครบ](docs/10-coverage-matrix.md)
+
+ถ้าเวลาน้อยให้อ่าน Kafka → Resume preparation → Next.js → Go production → PostgreSQL
+เพราะ Go/PostgreSQL เป็นพื้นฐานจากงานอยู่แล้ว ส่วน Kafka/Next.js เป็นจุดที่ต้องเตรียมภาษา
+อธิบายและ follow-up ให้ชัดกว่าเดิม
 
 ## Mini-labs
 
@@ -30,6 +45,9 @@ go test ./...
 - `go-worker-pool` — bounded concurrency, channel และ backpressure
 - `cqrs-basic` — แยก command/query และแสดง eventual consistency
 - `postgres` — transaction, optimistic locking, idempotency และ outbox ด้วย SQL
+
+Next.js มี code-reading lab เพิ่มที่ `labs/nextjs-import-dashboard` ครอบคลุม Server
+Component, Client upload form, Route Handler/BFF และ bounded status polling
 
 ## โปรเจกต์จริงที่ใช้ประกอบคำตอบ
 

@@ -83,7 +83,7 @@ transaction ต้องใช้ API/event/read model แทน join ตรง
 ### 16. CQRS คืออะไร
 
 แยก command ที่เปลี่ยน state จาก query ที่อ่าน เพื่อให้ model และ scaling เหมาะกับงาน
-ไม่จำเป็นต้องเป็น microservicesหรือ Event Sourcing
+ไม่จำเป็นต้องเป็น microservices หรือ Event Sourcing
 
 ### 17. CQRS มีต้นทุนอะไร
 

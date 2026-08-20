@@ -5,15 +5,17 @@
 
 ## คืนวันพฤหัสบดี 20 สิงหาคม
 
-### Block 1 — Go concurrency (60 นาที)
+### Block 1 — Go production review (30 นาที)
 
-1. อ่านหัวข้อ Go ใน cheat sheet 20 นาที
-2. รัน `go-context` และ `go-worker-pool` 20 นาที
-3. ตอบออกเสียง 20 นาที:
+เนื่องจากมีพื้นฐาน Go จากงานแล้ว ให้ทวนเฉพาะจุด production:
+
+1. อ่าน `06-go-production-review.md` 15 นาที
+2. เปิด mini-labs และตอบออกเสียง 15 นาที:
    - goroutine ต่างจาก thread อย่างไร
    - buffered channel สร้าง backpressure อย่างไร
    - ป้องกัน goroutine leak อย่างไร
    - context cancellation ส่งต่ออย่างไร
+   - background job ควรใช้ request context หรือไม่
 
 ### Block 2 — CQRS และ PostgreSQL (90 นาที)
 
@@ -36,7 +38,7 @@ HTTP handler
 - ทำไม `GET` ทันทีหลัง `POST` อาจยังไม่พบข้อมูล
 - optimistic concurrency ป้องกัน lost update อย่างไร
 
-### Block 3 — Kafka (90 นาที)
+### Block 3 — Kafka (120 นาที)
 
 เปิด `../go-kafka-shipment-tracker` แล้ว trace:
 
@@ -55,6 +57,15 @@ Producer
 - commit ก่อนหรือหลัง processing ต่างกันอย่างไร
 - process สำเร็จแต่ commit ล้มเหลวจะเกิดอะไร
 - retry topic และ DLQ ใช้เมื่อไร
+
+จากนั้นอ่าน `05-kafka-deep-dive.md` และซ้อมสาม use cases:
+
+1. Data import pipeline
+2. Inventory transfer
+3. External API/webhook
+
+ต้องอธิบาย partition key, idempotency, retry classification, ordering และ recovery ของ
+แต่ละ use case ให้ได้
 
 ### Block 4 — เล่าโปรเจกต์ (30 นาที)
 
@@ -106,7 +117,7 @@ Problem → Architecture → Critical decision → Failure handling → Trade-of
 
 ทำสองรอบ รอบสองต้องอธิบายสั้นและเป็นระบบกว่ารอบแรก
 
-### ช่วงเย็น — Next.js (60 นาที)
+### ช่วงเย็น — Next.js (90 นาที)
 
 เน้นเฉพาะเรื่องที่ backend/full-stack interview มักถาม:
 
@@ -116,6 +127,20 @@ Problem → Architecture → Critical decision → Failure handling → Trade-of
 - Route Handler/Server Action
 - HttpOnly cookie, XSS และ CSRF
 - eventual-consistency UX
+
+อ่าน code ใน `labs/nextjs-import-dashboard` ตาม flow:
+
+```text
+Server list page
+  → Client upload form
+  → Route Handler/BFF
+  → Go API
+  → Server detail page
+  → Client progress polling
+```
+
+ตอบให้ได้ว่า secret อยู่ฝั่งใด, cache layer ใด stale, ทำไม upload ใหญ่ควรใช้ presigned
+URL และ backend idempotency ยังจำเป็นแม้ปุ่มถูก disable
 
 ### ช่วงค่ำ — Mock interview (90 นาที)
 
@@ -131,6 +156,8 @@ Problem → Architecture → Critical decision → Failure handling → Trade-of
 2. การออกแบบระบบหรือเลือก trade-off
 3. ความเห็นไม่ตรงกับทีม
 4. การปรับ performance หรือ reliability
+
+ใช้ `09-resume-based-prep.md` และเติมตัวเลข/ข้อเท็จจริงจริง ห้ามสร้าง metric ที่จำไม่ได้
 
 ## เช้าวันเสาร์ 22 สิงหาคม
 

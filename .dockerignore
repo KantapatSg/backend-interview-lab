@@ -1,0 +1,9 @@
+.git
+.gitignore
+graphify-out
+platform/web/node_modules
+platform/web/.next
+**/*.test
+coverage.out
+*.exe
+.env

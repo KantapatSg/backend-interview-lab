@@ -23,12 +23,51 @@ eventual worker state is observed through the query endpoint.
 
 ## Run locally
 
+### Files that define the infrastructure
+
+| File | Responsibility |
+|---|---|
+| `compose.yaml` | PostgreSQL, Kafka (KRaft), Redis, migration runner, Go API/worker and Next.js web service definitions |
+| `platform/migrations/001_init.sql` | PostgreSQL schema for `jobs`, `outbox_events` and `processed_events` |
+| `infra/kafka/init-topics.sh` | Creates the local `jobs.events.v1`, `jobs.retry.v1` and `jobs.dlq.v1` topics idempotently |
+| `.dockerignore` | Keeps Go image builds small by excluding local build output and dependencies |
+| `platform/web/.dockerignore` | Keeps the Next.js image context small by excluding `node_modules` and `.next` |
+| `compose.test.yaml` | Removes host ports when Compose is used by CI/integration tests |
+
+Compose profiles deliberately make the labs incremental:
+
+| Profile | Starts | Use it for |
+|---|---|---|
+| `foundation` | PostgreSQL + one-shot migration | SQL, transactions, indexes and CQRS read/write labs |
+| `eventing` | Foundation + Kafka + topic initializer + Go worker | Outbox, Kafka delivery, retries and idempotent consumers |
+| `cache` | Foundation + Redis | Cache-aside and PostgreSQL fallback |
+| `full` | All infrastructure plus Go API, worker and Next.js | End-to-end lab |
+
+The recommended PowerShell wrappers are:
+
 ```powershell
-docker compose up -d postgres migrate
-docker compose --profile eventing up -d
-docker compose --profile cache up -d redis
-docker compose --profile full up --build -d
+.\scripts\infra-up.ps1 -Profile foundation
+.\scripts\infra-up.ps1 -Profile eventing
+.\scripts\infra-up.ps1 -Profile cache
+.\scripts\infra-up.ps1 -Profile full -Build
 .\scripts\infra-status.ps1
+```
+
+Equivalent direct Compose commands are useful during an interview:
+
+```powershell
+docker compose -p backend-interview-lab up -d postgres migrate
+docker compose -p backend-interview-lab --profile eventing up -d
+docker compose -p backend-interview-lab --profile cache up -d
+docker compose -p backend-interview-lab --profile full up --build -d
+```
+
+Inspect logs or stop the stack:
+
+```powershell
+.\scripts\infra-logs.ps1 -Service postgres
+.\scripts\infra-logs.ps1 -Service kafka -Follow
+.\scripts\infra-down.ps1
 ```
 
 Normal shutdown keeps data:

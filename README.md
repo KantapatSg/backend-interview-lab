@@ -34,10 +34,16 @@ PostgreSQL transactional outbox, Kafka producer/consumer and Redis cache-aside
 adapter. See [Infrastructure MyMap](mymap/infrastructure.md) and run:
 
 ```powershell
-go test ./...
-docker compose up -d postgres
-docker compose --profile full up --build -d
+.\scripts\infra-up.ps1 -Profile full -Build
+.\scripts\infra-status.ps1
 ```
+
+Infrastructure definitions are kept explicit in `compose.yaml`, the SQL
+migration at `platform/migrations/001_init.sql`, and Kafka topic creation at
+`infra/kafka/init-topics.sh`. For incremental labs, start only the foundation
+(`PostgreSQL + migration`), eventing (`Kafka + worker`), or cache (`Redis`)
+profile; see [the local infrastructure plan](docs/implementation-plans/local-infrastructure.md)
+for the exact commands and failure experiments.
 
 ถ้าเวลาน้อยให้อ่าน Kafka → Resume preparation → Next.js → Go production → PostgreSQL
 เพราะ Go/PostgreSQL เป็นพื้นฐานจากงานอยู่แล้ว ส่วน Kafka/Next.js เป็นจุดที่ต้องเตรียมภาษา
